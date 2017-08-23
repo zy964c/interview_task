@@ -4,12 +4,12 @@ import json
 import re
 
 app = Flask(__name__)
-
-
 db = TinyDB('db.json')
+
+
 @app.route('/get_form', methods=['POST', 'GET'])
 def check_db():
-    
+
     if request.method == 'POST':
 
         data = dict(request.form)
@@ -18,7 +18,7 @@ def check_db():
         FIELD_TYPE = 'text'
         if data:
             for k in data:
-                if db.search(Query()[k].exists()):
+                if db.search(Query()[k].exists()) and find_field(str(data[k][0])) == k:
                     m += 1
                     el = db.search(where(k) == str(data[k][0]))
                     for i in el:
@@ -40,18 +40,17 @@ def check_db():
                             winner = 'Form ' + k
                             cur_max = d[k]
                 res = {'Form': winner, 'Matches': cur_max}
-                return json.dumps(res)
+                return json.dumps(res)+'\n'
 
             n = {}
             for k in data:
                 FIELD_TYPE = find_field(str(data[k][0]))
                 n[k] = FIELD_TYPE
-            return json.dumps(n)
-
+            return json.dumps(n)+'\n'
 
         else:
-            return 'Empty request'
-    return 'Not a POST request'
+            return 'Empty request'+'\n'
+    return 'Not a POST request'+'\n'
 
 
 def find_field(f_value):
