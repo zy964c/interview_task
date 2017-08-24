@@ -15,7 +15,6 @@ def check_db():
         data = dict(request.form)
         d = {}
         m = 0
-        FIELD_TYPE = 'text'
         if data:
             for k in data:
                 if db.search(Query()[k].exists()) and find_field(str(data[k][0])) == k:
